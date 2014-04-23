@@ -13,6 +13,7 @@ if ser.isOpen():
 	print "Serial is open!"
 	while 1:
 		gps = ser.readline()
+		print gps
 		if(gps.startswith('$GPRMC')):		
 			gprmc = nmea.GPRMC()	
 			gprmc.parse(gps)
