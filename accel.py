@@ -7,9 +7,9 @@ ADC.setup()
 #zeroOffset Calculated with 100 kOhm resistor
 #zeroOffset = 1.466
 #zeroOffset for 470 K Ohm
-zeroOffset = 1.652
+zeroOffset = 1.658
 #From adxl335 data sheet - sensitivity is 300 mV/g
-conversionFactor = 0.300;
+conversionFactor = 0.314;
 
 f1 = open('acceleration.csv','w')
 f2 = open('rawAcceleration.csv','w');
