@@ -4,7 +4,7 @@ import time
 import math as mt
 ADC.setup()
 
-#See June 4 comment on http://ealmberg.blogspot.com/2015/06/4-june-15.html
+#See June 4 comment on http://bergenballoon.blogspot.com/
 
 Bvalue = 3348  #Beta
 Ro = 1000      #Resistance at 25 C 
