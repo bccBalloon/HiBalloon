@@ -1,4 +1,5 @@
 from Adafruit_I2C import Adafruit_I2C
+from time import sleep
 
 mag_read_addr = 0x3D
 mag_write_addr = 0x3C
@@ -19,3 +20,16 @@ i2c_read = Adafruit_I2C(mag_read_addr)
 i2c_write = Adafruit_I2C(mag_write_addr)
 
 
+while 1:
+   b_X = i2c_read.readS8(X_msb)
+   s_X = i2c_read.readU8(X_lsb)
+   b_Z = i2c_read.readS8(Z_msb)
+   s_Z = i2c_read.readU*(Y_lsb)
+   b_Y = i2c_read.readS8(Y_msb)
+   s_Y = i2c_read.readU8(Y_lsb)   
+
+   raw_X = b_X * 256 + s_X
+   raw_Z = b_Z * 256 + s_Z
+   raw_Y = b_Y * 256 + s_Y
+
+   sleep(1.0)
