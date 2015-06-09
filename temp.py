@@ -4,14 +4,14 @@ import time
 import math as mt
 ADC.setup()
 
-#See June 4 comment on http://bergenballoon.blogspot.com/
+#See June 4 comment on http://ealmberg.blogspot.com/2015/06/4-june-15.html
 
 Bvalue = 3348  #Beta
 Ro = 1000      #Resistance at 25 C 
 To = 298.15    #Room temperature Kelvin
 
 while 1 :
-   adcValue =  ADC.read("P9_36")
+   adcValue =  ADC.read("P9_37")
    R = 1000/((1/adcValue) - 1)  #Get measured resistance
    T = 1.0/To + (1.0/Bvalue)*mt.log(R/Ro)  #Formula from above blogspot address
  
