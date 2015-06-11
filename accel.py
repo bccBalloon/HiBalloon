@@ -5,14 +5,10 @@ import numpy as np
 
 ADC.setup()
 
-zeroOffsetZ = 1.672
-
 # Based on observation of high and low raw readings X 3.6 V. Then took the average of each.
-#zeroOffsetZ = 1.672
+zeroOffsetZ = 1.672
 zeroOffsetX = 1.595
 zeroOffsetY = 1.614
-
-
 
 #The sensitivity of conversion factor is the average for each axis minus low raw reading.
 conversionFactorZ = 0.322
@@ -43,6 +39,7 @@ while 1 :
     f1.write(str(now.month)+','+str(now.day)+','+str(now.hour)+','+str(now.minute)+','+str(now.second)+','+str(Zvalue)+','+str(Yvalue)+','+str(Xvalue)+'\n');
     f2.write(str(now.month)+','+str(now.day)+','+str(now.hour)+','+str(now.minute)+','+str(now.second)+','+ str(rawZ)+','+str(rawY)+','+str(rawX)+'\n');
     time.sleep(1)
+
 f1.close()
 f2.close()
 
