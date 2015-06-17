@@ -4,7 +4,7 @@ from time import sleep
 mag_read_addr = 0x3D
 mag_write_addr = 0x3C
 
-# Addresses for reading x,y,z axes of the magnotomer. They are stored in registers and read as most significant bits (msb) and least significan bits (lsb).
+# Addresses for reading x,y,z axes of the magnotomer. They are stored in registers and read as most significant byte (msb) and least significan byte (lsb).
 # See page 11:
 #http://www51.honeywell.com/aero/common/documents/myaerospacecatalog-documents/Defense_Brochures-documents/HMC5883L_3-Axis_Digital_Compass_IC.pdf
 
