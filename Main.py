@@ -11,6 +11,7 @@ from Adafruit_I2C import Adafruit_I2C
 # See page 11:
 #http://www51.honeywell.com/aero/common/documents/myaerospacecatalog-documents/Defense_Brochures-documents/HMC5883L_3-Axis_Digital_Co$
 
+gprmc = nmea.GPRMC()
 mag_addr = 0x1E
 config_register = 0x01
 X_msb = 0x03
@@ -46,8 +47,8 @@ Ro = 1000      #Resistance at 25 C
 To = 298.15    #Room temperature Kelvin
 
 #create files and headers that we will save our data too
-f1 = open('Data.csv','w')
-f2 = open('rawData.csv','w');
+f1 = open('Data.csv','a')
+f2 = open('rawData.csv','a');
 f1.write("Datestamp,Timestamp,Latitude,Longitude,Speed,Course,Accel Z,Accel Y,Accel X,Accel Norm,Mag Z,Mag Y,Mag X,Mag Norm,Int Temp,Ext Temp,Pressure,Sound,\n")
 f2.write("Datestamp,Timestamp,Latitude,Longitude,Speed,Course,Accel Z,Accel Y,Accel X,Mag Z,May Y,Mag X,Int Temp,Ext Temp,Pressure,Sound\n")
 
@@ -56,8 +57,7 @@ while 1 :
 #   get gps data
     gps = ser.readline()
     while(not gps.startswith('$GPRMC')):        
-       gps = ser.readline()
-    gprmc = nmea.GPRMC()    
+       gps = ser.readline()    
     gprmc.parse(gps)
 
 #   I2C code for reading the magnetometer
