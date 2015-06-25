@@ -13,7 +13,7 @@ f1 = open(rawSound.csv, 'a')
 f1.write("Minimum,Maximum")
 
 
-while count < iter:
+while n < count:
 	for x in xrange(0,cycles)
 		raw.append(ADC.read(soundPin))		
 		time.sleep(1/cycles)
@@ -22,5 +22,5 @@ while count < iter:
 	f1.write(str(min(raw))+','+str(max(raw)))
 	print "datapoint"
 	time.sleep(1)
-	count++
+	n++
 f1.close()
