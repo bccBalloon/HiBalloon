@@ -90,7 +90,7 @@ while 1 :
     Yaccel_raw =  ADC.read("P9_38")
     Xaccel_raw =  ADC.read("P9_36")
     rawT_int =  ADC.read("P9_37")  #Inside payload thermistor
-    rawT_ext =  ADC.read("P9_37")  #External thermistor
+    rawT_ext =  ADC.read("P9_35")  #External thermistor
     rawP =  ADC.read("P9_39")  # read pressure sensor
     
     #convert raw voltage to pressure Kpa - formula derived from data sheet, page 11: http://sensing.honeywell.com/index.php?ci_id=151133
