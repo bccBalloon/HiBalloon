@@ -21,7 +21,7 @@ while camera :
    T_K = 1.0/T
    if T_K > 301 and not cameraOn :
       cameraOn = camera.command('power', 'on')
-      time.sleep(5)  
+      time.sleep(5)
    print str(T_K) + ' K'  
    t_c = 1.0/T - 273.15   #Convert to celsius
    print str(t_c) + ' C'
@@ -29,11 +29,10 @@ while camera :
    print str(t_f)
    if T_K > 301 and cameraOn and not recording :
       recording = camera.command('record','on')
-      time.sleep(2)
-      
+      time.sleep(5)
    elif T_K <= 301 and cameraOn and recording :
-      recording =  not camera.command('record', 'off')
-      time.sleep(2)
+      recording = not camera.command('record', 'off')
+      time.sleep(5)
       cameraOn = not camera.command('power', 'sleep')
       time.sleep(5)    
 
