@@ -30,8 +30,14 @@ while camera :
    if T_K > 301 and cameraOn and not recording :
       recording = camera.command('record','on')
       time.sleep(5)
+<<<<<<< HEAD
    elif T_K <= 301 and cameraOn and recording :
       recording = not camera.command('record', 'off')
+=======
+      
+   elif T_K <= 301 and cameraOn and recording :
+      recording =  not camera.command('record', 'off')
+>>>>>>> b9c8e0014ec6dd4e5a6378c7034a8ec6642549ab
       time.sleep(5)
       cameraOn = not camera.command('power', 'sleep')
       time.sleep(5)    

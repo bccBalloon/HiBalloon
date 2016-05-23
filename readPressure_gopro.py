@@ -11,7 +11,11 @@ camera = gp.GoProHero('10.5.5.9', 'goprohero316')
 cameraOn = False
 recording = False
 
+<<<<<<< HEAD
 f1 = open('pressure_gopro1.csv','a')
+=======
+f1 = open('pressure_gopro.csv','a')
+>>>>>>> b9c8e0014ec6dd4e5a6378c7034a8ec6642549ab
 f1.write("Month,Day,Hour,Minute,Second,Raw Pressure,Pressure (kPa),Recording\n")
 
 
@@ -21,8 +25,13 @@ while 1 :
     #convert raw voltage to pressure in Hg - formula derived from data sheet, page 11: http://sensing.honeywell.com/index.php?ci_id=151133
     #p = ((raw * 1.8 * 2 -.33)/1.65)*29.92
     p = ((rawP * 1.8 * 2 -.33)/1.65)*100
+<<<<<<< HEAD
     p = ((rawP * 1.8 * 2 -.33)/1.65)*100
     #print str(rawP) + ' ' + str(p)
+=======
+    #p = ((rawP * 1.8 * 2 -.33)/1.65)*100
+    print str(rawP) + ' ' + str(p)
+>>>>>>> b9c8e0014ec6dd4e5a6378c7034a8ec6642549ab
     if p < 1.09 and not cameraOn :
        cameraOn = camera.command('power', 'on')
        time.sleep(5)

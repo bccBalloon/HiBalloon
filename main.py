@@ -1,4 +1,3 @@
-import os
 import Adafruit_BBIO.ADC as ADC
 import Adafruit_BBIO.UART as UART
 import time
@@ -46,25 +45,6 @@ conversionFactorX = 0.319
 Bvalue = 3348  #Beta
 Ro = 1000      #Resistance at 25 C 
 To = 298.15    #Room temperature Kelvin
-
-led3_on = 'echo 1 > /sys/class/leds/beaglebone:green:usr3/brightness'
-#Command for turning led3 "Off"
-led3_off = 'echo 0 > /sys/class/leds/beaglebone:green:usr3/brightness'
-
-gps = ser.readline()
-while(not gps.startswith('$GPRMC')):
-    gps = ser.readline()
-gprmc.parse(gps)
-
-
-#while gprmc.timestamp == "":
-#     os.system(led3_on)
-#     gps = ser.readline()
-#     while(not gps.startswith('$GPRMC')):
-#       gps = ser.readline()
-#     gprmc.parse(gps)
-
-#os.system(led3_off)
 
 #create files and headers that we will save our data too
 f1 = open('Data.csv','a')
@@ -154,8 +134,6 @@ while 1 :
     f1.write(gprmc.datestamp+','+gprmc.timestamp+','+gprmc.lat + gprmc.lat_dir+','+gprmc.lon + gprmc.lon_dir+','+gprmc.spd_over_grnd+','+gprmc.true_course+','+str(Zaccel)+','+str(Yaccel)+','+str(Xaccel)+','+str(np.linalg.norm(accel_vector))+','+str(Zmag)+','+str(Ymag)+','+str(Xmag)+','+str(np.linalg.norm(mag_vector))+','+str(T_int)+','+str(T_ext)+','+str(p)+'\n')     
     f2.write(gprmc.datestamp+','+gprmc.timestamp+','+gprmc.lat + gprmc.lat_dir+','+gprmc.lon + gprmc.lon_dir+','+gprmc.spd_over_grnd+','+gprmc.true_course+','+ str(Zaccel_raw)+','+str(Yaccel_raw)+','+str(Xaccel_raw)+','+ str(Zmag_raw)+','+str(Ymag_raw)+','+str(Xmag_raw)+','+str(rawT_int)+','+str(rawT_ext)+','+str(rawP)+'\n');
     print "datapoint"
-    
-    print str((T_ext-273.15)*9.0/5.0+32.0)
     time.sleep(1)
 f1.close()
 f2.close()
