@@ -15,10 +15,11 @@ conversionFactorZ = 0.322
 conversionFactorY = 0.325
 conversionFactorX = 0.319
 
-f1 = open('acceleration.csv','w')
-f2 = open('rawAcceleration.csv','w');
+f1 = open('acceleration.csv','a')
+f2 = open('rawAcceleration.csv','a');
 f1.write("Month,Day,Hour,Minute,Second,Z,Y,X\n")
 f2.write("Month,Day,Hour,Minute,Second,Zraw,Yraw,Xraw\n")
+
 
 while 1 :
     now = datetime.datetime.now()
