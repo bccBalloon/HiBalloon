@@ -18,13 +18,7 @@ conversionFactorY = 0.325
 conversionFactorZ = 0.322
 
 f1 = open('acceleration.csv','a')
-<<<<<<< HEAD
-f2 = open('rawAcceleration.csv','a');
-f1.write("Month,Day,Hour,Minute,Second,Z,Y,X\n")
-f2.write("Month,Day,Hour,Minute,Second,Zraw,Yraw,Xraw\n")
-=======
 f1.write("Month,Day,Hour,Minute,Second,Xraw,Yraw,Zraw,X,Y,Z\n")
->>>>>>> 2e55c79d6ad4f32d482719a985e29d73e6af3810
 
 
 while 1 :
