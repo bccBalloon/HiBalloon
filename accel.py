@@ -34,10 +34,10 @@ while 1 :
     
     # raw input is multiplied by 3.6 because it has to be multiplied by 1.8 to get voltage and since it is hooked up to a voltage
     # divider it also needs to be multiplied by 2 to get the original voltage
-    print 'X =', str(Xvalue), 'Y =', str(Yvalue), 'Z =', str(Zvalue)
+    # Debug     print 'X =', str(Xvalue), 'Y =', str(Yvalue), 'Z =', str(Zvalue)
     a = np.array([Xvalue, Yvalue, Zvalue])
-    print 'Norm =', str(np.linalg.norm(a))
-    print 'Xraw =', str(rawX * 3.6), 'Yraw =', str(rawY * 3.6), 'Zraw =', str(rawZ * 3.6)
+    # Debug     print 'Norm =', str(np.linalg.norm(a))
+    # Debug     print 'Xraw =', str(rawX * 3.6), 'Yraw =', str(rawY * 3.6), 'Zraw =', str(rawZ * 3.6)
     f1.write(str(now.month)+','+str(now.day)+','+str(now.hour)+','+str(now.minute)+','+str(now.second)+','+str(rawX)+','+str(rawY)+','+str(rawZ)+','+str(Xvalue)+','+str(Yvalue)+','+str(Zvalue)+'\n')
     time.sleep(1)
 
