@@ -12,22 +12,33 @@ Bvalue = 3348  		#Beta
 Ro = 1000      		#Resistance at 25 C 
 To = 298.15    		#Room temperature in Kelvin
 
-outfile = open('externalTemp.csv','a')
-outfile.write("Month,Day,Hour,Minute,Second,ADC,Resistance,Kelvin,Celsius,Fahrenheit\n")
+while 1:
+	try:
+		outfile = open('externalTemp.csv','a')
+		#raise IOError
+		if not outfile.closed:
+			outfile.write("Month,Day,Hour,Minute,Second,ADC,Resistance,Kelvin,Celsius,Fahrenheit\n")
+			break
+	except Exception as err:
+		print 'Error:', err
+		time.sleep(1)
 
-while 1 :
-	now = datetime.datetime.now()
+while 1:
+	try:
+		now = datetime.datetime.now()
 
-	adcValue =  ADC.read("P9_35")
-	R = Ro/((1/adcValue) - 1)						#Get measured resistance
-	kelvin = 1.0/To + (1.0/Bvalue)*mt.log(R/Ro)		#Formula from above blogspot address
-	kelvin = 1.0/kelvin 			
-	celsius = kelvin - 273.15 						
-	fahrenheit = celsius*(9/5.0) + 32.0  			
+		adcValue =  ADC.read("P9_35")
+		R = Ro/((1/adcValue) - 1)						#Get measured resistance
+		kelvin = 1.0/To + (1.0/Bvalue)*mt.log(R/Ro)		#Formula from above blogspot address
+		kelvin = 1.0/kelvin 			
+		celsius = kelvin - 273.15 						
+		fahrenheit = celsius*(9/5.0) + 32.0  			
 
-	outfile.write(str(now.month)+','+str(now.day)+','+str(now.hour)+','+str(now.minute)+','+str(now.second)+','+str(adcValue)+','+str(R)+','+str(kelvin)+','+str(celsius)+','+str(fahrenheit)+'\n')
-	print str(kelvin) + 'K', str(celsius) + ' C', str(fahrenheit) + ' F'
-	
+		outfile.write(str(now.month)+','+str(now.day)+','+str(now.hour)+','+str(now.minute)+','+str(now.second)+','+str(adcValue)+','+str(R)+','+str(kelvin)+','+str(celsius)+','+str(fahrenheit)+'\n')
+		print str(kelvin) + 'K', str(celsius) + ' C', str(fahrenheit) + ' F'
+	except Exception as err:
+		print 'Error:', err
+
 	time.sleep(1)
 
 outfile.close()
