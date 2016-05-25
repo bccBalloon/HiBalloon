@@ -18,7 +18,7 @@ conversionFactorY = 0.325
 conversionFactorZ = 0.322
 
 f1 = open('acceleration.csv','a')
-f1.write("Month,Day,Hour,Minute,Second,Xraw,Yraw,Zraw,X,Y,Z\n")
+f1.write("Month,Day,Hour,Minute,Second,Xraw,Yraw,Zraw,X,Y,Z,Norm\n")
 
 while 1 :
     now = datetime.datetime.now()
@@ -26,19 +26,19 @@ while 1 :
     rawY =  ADC.read("P9_38")
     rawZ =  ADC.read("P9_40")
 
-    # Convert raw values to g values
+    # Convert raw values to g values. Note: accelerometer is upside down 
     # Reference: http://beagleboard.org/support/BoneScript/accelerometer/
-    Xvalue = ((rawX * 3.6) - zeroOffsetX)/conversionFactorX
+    Xvalue = -1*((rawX * 3.6) - zeroOffsetX)/conversionFactorX
     Yvalue = ((rawY * 3.6) - zeroOffsetY)/conversionFactorY
-    Zvalue = ((rawZ * 3.6) - zeroOffsetZ)/conversionFactorZ
+    Zvalue = -1*((rawZ * 3.6) - zeroOffsetZ)/conversionFactorZ
     
     # raw input is multiplied by 3.6 because it has to be multiplied by 1.8 to get voltage and since it is hooked up to a voltage
     # divider it also needs to be multiplied by 2 to get the original voltage
-    # Debug     print 'X =', str(Xvalue), 'Y =', str(Yvalue), 'Z =', str(Zvalue)
+    #print 'X =', str(Xvalue), 'Y =', str(Yvalue), 'Z =', str(Zvalue)
     a = np.array([Xvalue, Yvalue, Zvalue])
-    # Debug     print 'Norm =', str(np.linalg.norm(a))
-    # Debug     print 'Xraw =', str(rawX * 3.6), 'Yraw =', str(rawY * 3.6), 'Zraw =', str(rawZ * 3.6)
-    f1.write(str(now.month)+','+str(now.day)+','+str(now.hour)+','+str(now.minute)+','+str(now.second)+','+str(rawX)+','+str(rawY)+','+str(rawZ)+','+str(Xvalue)+','+str(Yvalue)+','+str(Zvalue)+'\n')
+    #print 'Norm =', str(np.linalg.norm(a))
+    #print 'Xraw =', str(rawX * 3.6), 'Yraw =', str(rawY * 3.6), 'Zraw =', str(rawZ * 3.6)
+    f1.write(str(now.month)+','+str(now.day)+','+str(now.hour)+','+str(now.minute)+','+str(now.second)+','+str(rawX)+','+str(rawY)+','+str(rawZ)+','+str(Xvalue)+','+str(Yvalue)+','+str(Zvalue)+','+str(np.linalg.norm(a))+'\n')
     time.sleep(1)
 
 f1.close()
