@@ -20,6 +20,7 @@ conversionFactorZ = 0.322
 f1 = open('acceleration.csv','a')
 f1.write("Month,Day,Hour,Minute,Second,Xraw,Yraw,Zraw,X,Y,Z,Norm\n")
 
+
 while 1 :
     now = datetime.datetime.now()
     rawX =  ADC.read("P9_36")
