@@ -7,7 +7,7 @@ ADC.setup()
 
 #See June 4 comment on http://ealmberg.blogspot.com/2015/06/4-june-15.html
 
-f1 = open('temp.csv', 'a')
+f1 = open('/media/CARD/temp2.csv', 'a')
 f1.write("Month,Day,Hour,Minute,Second,Kelvin,Celsius,Fahrenheit\n")
 Bvalue = 3348  #Beta
 Ro = 1000      #Resistance at 25 C - room temperature
