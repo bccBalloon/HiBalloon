@@ -36,11 +36,11 @@ while 1 :
     rawY =  ADC.read("P9_38")
     rawZ =  ADC.read("P9_40")
 
-    # Convert raw values to g values. Note: accelerometer is upside down 
+    # Convert raw values to g values 
     # Reference: http://beagleboard.org/support/BoneScript/accelerometer/
-    Xvalue = -1*((rawX * 3.6) - zeroOffsetX)/conversionFactorX
+    Xvalue = ((rawX * 3.6) - zeroOffsetX)/conversionFactorX
     Yvalue = ((rawY * 3.6) - zeroOffsetY)/conversionFactorY
-    Zvalue = -1*((rawZ * 3.6) - zeroOffsetZ)/conversionFactorZ
+    Zvalue = ((rawZ * 3.6) - zeroOffsetZ)/conversionFactorZ
     
     # raw input is multiplied by 3.6 because it has to be multiplied by 1.8 to get voltage and since it is hooked up to a voltage
     # divider it also needs to be multiplied by 2 to get the original voltage
