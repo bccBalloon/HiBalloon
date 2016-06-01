@@ -19,7 +19,7 @@ conversionFactorZ = 0.322
 
 while 1:
     try:
-        f1 = open('acceleration.csv','a')
+        f1 = open('/media/CARD/acceleration.csv','a')
         # raise IOError
         if not f1.closed:
             print "Successfully opened", f1.name
