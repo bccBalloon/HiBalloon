@@ -7,7 +7,7 @@ ADC.setup()
 
 while 1:
   try:
-    f1 = open('pressure.csv', 'a')
+    f1 = open('/media/CARD/pressure.csv', 'a')
     if not f1.closed:
       f1.write("Month,Day,Hour,Minute,Second,p,rawP\n")
       break
