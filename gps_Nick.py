@@ -1,7 +1,7 @@
 import Adafruit_BBIO.UART as UART
 import serial
 import time
-#from time import gmtime, strftime
+from time import gmtime, strftime
 import datetime
 from pynmea import nmea
  
@@ -26,42 +26,16 @@ if ser.isOpen():
 			#print gps
 			f1.write(gps)
 			#f1.write('\n')
+			local_time = time.time() - 14400 #Add 3600 when DST changes
 			try:
 				print "Timestamp: " + gprmc.timestamp
+				print time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(local_time)) + ' DST'
 			#	print datetime.datetime.fromtimestamp(float(gprmc.timestamp)).strftime('%Y-%m-%d %H:%M:%S')
 			#	f1.write(gprmc)
 	
 			#	f1.write(datetime.datetime.fromtimestamp(float(gprmc.timestamp)).strftime('%H:%M:%S'))
 			except Exception as err:
 				print(err)
-			try:
-				print "Datestamp: " + gprmc.datestamp
-			except Exception as err:
-				print("Datestamp Error: " + err)
-			try:
-				print "Latitude: " + gprmc.latitude
-			except Exception as err:
-				print("Latitude Error: "+err)
-			try:
-				print "Latitude Direction: " + gprmc.lat_direction
-			except Exception as err:
-				print("Latitude Direction Error: "+err)
-			try:
-				print "Longitude: " + gprmc.longitude 
-			except Exception as err:
-				print("Longitude Error: "+err)
-			try:
-				print "longitude Direction: " + gprmc.lon_direction
-			except Exception as err:
-				print("Longitude Direction Error: "+err)
-			try:
-				print "Speed over ground: " + gprmc.spd_over_grnd
-			except Exception as err:
-				print("Speed over ground error: "+err)
-			try:
-				print "True Course: " + gprmc.true_course
-			except Exception as err:
-				print("True Course Error: " + err)
 #			f1.write('\n')
 #			f1.write(datetime.datetime.fromtimestamp(float(gprmc.datestamp)).strftime('%Y-%m-%d'))
 #			f1.write('\n')
