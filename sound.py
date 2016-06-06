@@ -9,8 +9,8 @@ raw = []
 count = 10
 n = 0
 
-f1 = open(rawSound.csv, 'a')
-f1.write("Minimum,Maximum")
+f1 = open('rawSound.csv', 'a')
+f1.write("Minimum,Maximum\n")
 
 
 while n < count:
