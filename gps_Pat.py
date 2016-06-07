@@ -47,9 +47,9 @@ if ser.isOpen():
 
 				gga = nmea.GPGGA()	
 				gga.parse(gps)
-				print gps
+				print gps,
 				print "GPS Quality: " + gga.gps_qual
-				print "Satellites in view: " + num_sats
+				print "Satellites in view: " + gga.num_sats
 				print "Timestamp: " + gga.timestamp
 				print "Latitude: " + gga.latitude + ' ' + gga.lat_direction
 				print "Longitude: " + gga.longitude + ' ' + gga.lon_direction
@@ -60,7 +60,7 @@ if ser.isOpen():
 
 				gprmc = nmea.GPRMC()	
 				gprmc.parse(gps)
-				print gps
+				print gps,
 				# print "Timestamp: " + gprmc.timestamp
 				print "Datestamp: " + gprmc.datestamp + '\n'
 				"""
@@ -75,16 +75,15 @@ if ser.isOpen():
 				
 				gpvtg = nmea.GPVTG()
 				gpvtg.parse(gps)
-				print gps
-				print "Ground speed, knots: " + gpvtg.spd_over_grnd_kts
-				print "Ground speed, kmph: " + gpvtg.spd_over_grnd_kmph + '\n'
+				print gps,
+				print "Ground speed: " + gpvtg.spd_over_grnd_kts + ' knots ' + gpvtg.spd_over_grnd_kmph + ' kmph\n'
 
 			# Print the time in reference to daylight savings
 			local_time = time.time() - 14400 #Add 3600 when DST changes
-			print "Timestamp(adjusted): " + gprmc.timestamp
-			print time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(local_time)) + ' DST\n'
+			# print "Timestamp(adjusted): " + gprmc.timestamp
+			print "Date and time: " + time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(local_time)) + ' DST\n'
 		except Exception as err:
 			print "Error: " + str(err)
-			
+
 		time.sleep(1)
 f1.close()
