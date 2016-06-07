@@ -12,6 +12,7 @@ Bvalue = 3348  		#Beta
 Ro = 1000      		#Resistance at 25 C 
 To = 298.15    		#Room temperature in Kelvin
 
+# Make sure the out file is opened properly
 while 1:
 	try:
 		outfile = open('externalTemp.csv','a')
@@ -24,6 +25,7 @@ while 1:
 		print 'Error:', err
 		time.sleep(1)
 
+# Get thermistor values and write them to file
 while 1:
 	try:
 		now = datetime.datetime.now()

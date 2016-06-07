@@ -17,6 +17,7 @@ conversionFactorX = 0.319
 conversionFactorY = 0.325
 conversionFactorZ = 0.322
 
+# Make sure the out file is opened properly
 while 1:
     try:
         f1 = open('acceleration.csv','a')
@@ -29,7 +30,7 @@ while 1:
         print 'Error:', err
         time.sleep(1)
 
-
+# Get accelerometer values and write them to file
 while 1 :
     now = datetime.datetime.now()
     rawX =  ADC.read("P9_36")
