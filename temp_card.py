@@ -14,7 +14,7 @@ To = 298.15    #Room temperature Kelvin
 
 while 1
   try:
-      f1 = open('temp.csv', 'a')
+      f1 = open('/media/CARD/temp2.csv', 'a')
       #raise IOError
       if not f1.closed:
          print "Successfully opened", f1.name
