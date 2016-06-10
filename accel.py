@@ -22,10 +22,9 @@ while 1:
     try:
         f1 = open('acceleration.csv','a')
         # raise IOError
-        if not f1.closed:
-            print "Successfully opened", f1.name
-            f1.write("Month,Day,Hour,Minute,Second,Xraw,Yraw,Zraw,X,Y,Z,Norm\n")
-            break
+        print "Successfully opened", f1.name
+        f1.write("Month,Day,Hour,Minute,Second,Xraw,Yraw,Zraw,X,Y,Z,Norm\n")
+        break
     except Exception as err:
         print 'Error:', err
         time.sleep(1)

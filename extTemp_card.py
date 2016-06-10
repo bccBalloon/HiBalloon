@@ -17,10 +17,9 @@ while 1:
 	try:
 		outfile = open('/media/CARD/externalTemp2.csv','a')
 		#raise IOError
-		if not outfile.closed:
-			print "Successfully opened", outfile.name
-			outfile.write("Month,Day,Hour,Minute,Second,ADC,Resistance,Kelvin,Celsius,Fahrenheit\n")
-			break
+		print "Successfully opened", outfile.name
+		outfile.write("Month,Day,Hour,Minute,Second,ADC,Resistance,Kelvin,Celsius,Fahrenheit\n")
+		break
 	except Exception as err:
 		print 'Error:', err
 		time.sleep(1)
