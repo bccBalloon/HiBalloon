@@ -8,27 +8,30 @@ ADC.setup()
 while 1:
   try:
     f1 = open('/media/CARD/pressure2.csv', 'a')
-    if not f1.closed:
-      f1.write("Month,Day,Hour,Minute,Second,p,rawP\n")
-      break
+    f2 = open('/media/CARD/pressure_errors2.csv', 'a')
+    print "Successfully opened", f1.name
+    print "Successfully opened", f2.name
+    f1.write("Month,Day,Hour,Minute,Second,p,rawP\n")
+    f2.write("Month,Day,Hour,Minute,Second,Error\n")
+    break
   except Exception as error1:
     print 'Error ' + str(error1)
     time.sleep(1)
 
 while 1:
-  now = datetime.datetime.now()
-  rawP =  ADC.read("P9_39")
-  p = ((rawP * 1.8 * 2 -.33)/1.65)*100
-  print str(rawP) + ' ' + str(p)
   try:
+    now = datetime.datetime.now()
+
+    rawP =  ADC.read("P9_39")
+    print 'Raw Pressure: ' + str(rawP)
+    p = ((rawP * 1.8 * 2 -.33)/1.65)*100
+    print 'Pressure: ' + str(p)
+
     f1.write(str(now.month)+','+str(now.day)+','+str(now.hour)+','+str(now.minute)+','+str(now.second)+','+str(p)+','+str(rawP)+'\n')
-    time.sleep(1)
   except Exception as error2:
     print 'Error ' + str(error2)
+    f2.write(str(now.month)+','+str(now.day)+','+str(now.hour)+','+str(now.minute)+','+str(now.second)+','+str(error2)+'\n');
+  time.sleep(1)
 
-try:
-  f1.close()
-  if f1.closed:
-    pass
-except Exception as error3:
-  print 'Error ' + str(error3)
+f1.close()
+f2.close()

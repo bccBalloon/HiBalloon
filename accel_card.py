@@ -19,19 +19,21 @@ conversionFactorZ = 0.322
 
 # Make sure the out file is opened properly
 while 1:
-    try:
-        f1 = open('/media/CARD/acceleration2.csv','a')
-        # raise IOError
-        if not f1.closed:
-            print "Successfully opened", f1.name
-            f1.write("Month,Day,Hour,Minute,Second,Xraw,Yraw,Zraw,X,Y,Z,Norm\n")
-            break
-    except Exception as err:
-        print 'Error:', err
-        time.sleep(1)
+  try:
+    f1 = open('/media/CARD/acceleration2.csv','a')
+    f2 = open('/media/CARD/acceleration_errors2.csv','a')
+    print "Successfully opened", f1.name
+    print "Successfully opened", f2.name
+    f1.write("Month,Day,Hour,Minute,Second,Xraw,Yraw,Zraw,X,Y,Z,Norm\n")
+    f2.write("Month,Day,Hour,Minute,Second,Error\n")
+    break
+  except Exception as error1:
+    print 'Error ' + str(error1)
+    time.sleep(1)
 
 # Get accelerometer values and write them to file
-while 1 :
+while 1:
+  try:
     now = datetime.datetime.now()
     rawX =  ADC.read("P9_36")
     rawY =  ADC.read("P9_38")
@@ -45,11 +47,19 @@ while 1 :
     
     # raw input is multiplied by 3.6 because it has to be multiplied by 1.8 to get voltage and since it is hooked up to a voltage
     # divider it also needs to be multiplied by 2 to get the original voltage
-    #print 'X =', str(Xvalue), 'Y =', str(Yvalue), 'Z =', str(Zvalue)
+    print 'X: ' + str(Xvalue)
+    print 'Y: ' + str(Yvalue)
+    print 'Z: ' + str(Zvalue)
     a = np.array([Xvalue, Yvalue, Zvalue])
-    #print 'Norm =', str(np.linalg.norm(a))
-    #print 'Xraw =', str(rawX * 3.6), 'Yraw =', str(rawY * 3.6), 'Zraw =', str(rawZ * 3.6)
+    print 'Norm: ' + str(np.linalg.norm(a))
+    print 'Xraw: ' + str(rawX * 3.6)
+    print 'Yraw: ' + str(rawY * 3.6) 
+    print 'Zraw: ' + str(rawZ * 3.6)
     f1.write(str(now.month)+','+str(now.day)+','+str(now.hour)+','+str(now.minute)+','+str(now.second)+','+str(rawX)+','+str(rawY)+','+str(rawZ)+','+str(Xvalue)+','+str(Yvalue)+','+str(Zvalue)+','+str(np.linalg.norm(a))+'\n')
-    time.sleep(1)
+  except Exception as error2:
+    print 'Error ' + str(error2)
+    f2.write(str(now.month)+','+str(now.day)+','+str(now.hour)+','+str(now.minute)+','+str(now.second)+','+str(error2)+'\n');
+  time.sleep(1)
 
 f1.close()
+f2.close()

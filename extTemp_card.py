@@ -8,40 +8,45 @@ ADC.setup()
 
 #See June 4 comment on http://ealmberg.blogspot.com/2015/06/4-june-15.html
 
-Bvalue = 3348  		#Beta
-Ro = 1000      		#Resistance at 25 C 
-To = 298.15    		#Room temperature in Kelvin
+Bvalue = 3348  #Beta
+Ro = 1000      #Resistance at 25 C 
+To = 298.15    #Room temperature in Kelvin
 
 # Make sure the out file is opened properly
 while 1:
-	try:
-		outfile = open('/media/CARD/externalTemp2.csv','a')
-		#raise IOError
-		if not outfile.closed:
-			print "Successfully opened", outfile.name
-			outfile.write("Month,Day,Hour,Minute,Second,ADC,Resistance,Kelvin,Celsius,Fahrenheit\n")
-			break
-	except Exception as err:
-		print 'Error:', err
-		time.sleep(1)
+  try:
+    f1 = open('/media/CARD/externalTemp2.csv','a')
+    f2 = open('/media/CARD/externalTemp_errors2.csv', 'a')
+    print "Successfully opened", f1.name
+    print "Successfully opened", f2.name
+    f1.write("Month,Day,Hour,Minute,Second,ADC,Resistance,Kelvin,Celsius,Fahrenheit\n")
+    f2.write("Month,Day,Hour,Minute,Second,Error\n")
+    break
+  except Exception as error1:
+    print 'Error ' + str(error1)
+    time.sleep(1)
 
-# Get thermisotr values and write them to file
+# Get thermistor values and write them to file
 while 1:
-	try:
-		now = datetime.datetime.now()
+  try:
+    now = datetime.datetime.now()
 
-		adcValue =  ADC.read("P9_35")
-		R = Ro/((1/adcValue) - 1)						#Get measured resistance
-		kelvin = 1.0/To + (1.0/Bvalue)*mt.log(R/Ro)		#Formula from above blogspot address
-		kelvin = 1.0/kelvin 			
-		celsius = kelvin - 273.15 						
-		fahrenheit = celsius*(9/5.0) + 32.0  			
+    adcValue =  ADC.read("P9_35")
+    R = Ro/((1/adcValue) - 1)  #Get measured resistance
+    T = 1.0/To + (1.0/Bvalue)*mt.log(R/Ro)  #Formula from above blogspot address
 
-		outfile.write(str(now.month)+','+str(now.day)+','+str(now.hour)+','+str(now.minute)+','+str(now.second)+','+str(adcValue)+','+str(R)+','+str(kelvin)+','+str(celsius)+','+str(fahrenheit)+'\n')
-		print str(kelvin) + 'K', str(celsius) + ' C', str(fahrenheit) + ' F'
-	except Exception as err:
-		print 'Error:', err
+    t_k = 1.0/T  #Temperature in Kelvin 
+    print str(t_k) + 'K'  
+    t_c = 1.0/T - 273.15   #Convert to celsius
+    print str(t_c) + 'C'
+    t_f = t_c*(9/5.0) + 32.0  #Convert to Fahrenheit
+    print str(t_f) + 'F'
 
-	time.sleep(1)
+    f1.write(str(now.month)+','+str(now.day)+','+str(now.hour)+','+str(now.minute)+','+str(now.second)+','+str(adcValue)+','+str(R)+','+str(t_k)+','+str(t_c)+','+str(t_f)+'\n');
+  except Exception as error2:
+    print 'Error ' + str(error2)
+    f2.write(str(now.month)+','+str(now.day)+','+str(now.hour)+','+str(now.minute)+','+str(now.second)+','+str(error2)+'\n');
+  time.sleep(1)
 
-outfile.close()
+f1.close()
+f2.close()
