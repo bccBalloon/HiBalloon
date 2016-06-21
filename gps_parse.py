@@ -1,9 +1,17 @@
+""""Description:
+		Collects information from the raw GPS data and writes them out to several files:
+			- 2 .csv files for GPS data
+			- googleEarth.kml for opening in Google Earth
+			- googleMyMaps.csv for importing to Google My Maps
+			- 1 .txt file as an error log
+"""
+
 from pynmea import nmea
 import datetime
 
 start_time = datetime.datetime.now()
 
-"""	NOTE: 
+"""	NOTE:
 	The pynmea library creates NMEASentence classes whose attributes are parts of an nmea sentence.
 	Since, at the time of this file being written, there is no documentation providing the attribute names,
 	the next best place to look for these names would be in nmea.py from the pynmea library.
@@ -62,7 +70,7 @@ with open('gps_raw_test.csv') as infile, open('gps_gga.csv', 'w') as outGGA, ope
 		try:
 			# work on dt = datetime.datetime.strptime( line[:line.rfind('2016-')+26], '%Y-%m-%d %H:%M:%S.%f')
 			dt = datetime.datetime.strptime( line[:line.find(',')], '%Y-%m-%d %H:%M:%S.%f')
-			local_datetime = dt.strftime('%b %d %Y\t%H:%M:%S.%f')
+			local_datetime = dt.strftime('%m/%d/%Y %H:%M:%S.%f')
 
 			# If there is a second nmea sentence that cuts into the first (which happens frequently), use the second one
 			# Assume that every nmea sentence has a '$' character
@@ -82,7 +90,7 @@ with open('gps_raw_test.csv') as infile, open('gps_gga.csv', 'w') as outGGA, ope
 				rmc = nmea.GPRMC()	
 				rmc.parse(gps)
 				#print local_datetime + ',' + gps,
-				outRMC.write(local_datetime + ',' + getDateOrTime('%b %d %Y\t%H:%M:%S.%f', rmc.timestamp, rmc.datestamp) + ',' + rmc.lat + ',' + rmc.lat_dir + ',' + rmc.lon + ',' + rmc.lon_dir + ',' + rmc.spd_over_grnd + ',' + str(float(rmc.spd_over_grnd)/0.868976) + ',' + rmc.true_course + '\n')
+				outRMC.write(local_datetime + ',' + getDateOrTime('%m/%d/%Y %H:%M:%S.%f', rmc.timestamp, rmc.datestamp) + ',' + rmc.lat + ',' + rmc.lat_dir + ',' + rmc.lon + ',' + rmc.lon_dir + ',' + rmc.spd_over_grnd + ',' + str(float(rmc.spd_over_grnd)/0.868976) + ',' + rmc.true_course + '\n')
 				
 				# Should the rmc data be included to googleMyMaps.csv?
 				#if rmc.lat and rmc.lon:
