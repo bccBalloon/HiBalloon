@@ -1,17 +1,10 @@
-""""Description:
-		Collects information from the raw GPS data and writes them out to several files:
-			- 2 .csv files for GPS data
-			- googleEarth.kml for opening in Google Earth
-			- googleMyMaps.csv for importing to Google My Maps
-			- 1 .txt file as an error log
-"""
-
 from pynmea import nmea
 import datetime
+import re
 
 start_time = datetime.datetime.now()
 
-"""	NOTE:
+"""	NOTE: 
 	The pynmea library creates NMEASentence classes whose attributes are parts of an nmea sentence.
 	Since, at the time of this file being written, there is no documentation providing the attribute names,
 	the next best place to look for these names would be in nmea.py from the pynmea library.
@@ -37,7 +30,7 @@ def getDecimalDegrees(coordinate, direction):
 	else:
 		return str(coor)
 
-# Return raw date and/or time that follows the string format
+# Get raw date and/or time and return it according to string format
 def getDateOrTime(format, timestamp, datestamp=None):
 	time_num = float(timestamp)
 	hour = int(time_num)/10000
@@ -58,51 +51,70 @@ def getDateOrTime(format, timestamp, datestamp=None):
 	# print '%i:%i:%i.%i' % (hour,minute,second,microsecond)
 	return dt.strftime(format)
 
+# Variables
+error_count = 0
+maps_count = 1
+maps_offset = ''
+maps_title = 'BeagleBone Black Date and Time UTC,DD Latitude,DD Longitude,Altitude Above Sea Level (meters)\n'
+
+
 # Write out data to files
 with open('gps_raw.csv') as infile, open('gps_gga.csv', 'w') as outGGA, open('gps_rmc.csv', 'w') as outRMC, open('googleEarth.kml', 'w') as gEarth, open('googleMyMaps.csv', 'w') as myMaps, open('gps_errors.txt', 'w') as errors:
 	outGGA.write('BeagleBone Black Date and Time UTC, Satellite Timestamp UTC,DDM Latitude,Latitude Direction,DDM Longitude,Longitude Direction,Altitude Above Sea Level (meters),GPS Quality,Satellites in View\n')
 	outRMC.write('BeagleBone Black Date and Time UTC,Satellite Date and Time UTC,DDM Latitude,Latitude Direction,DDM Longitude,Longitude Direction,Raw Ground Speed (knots), Converted Ground Speed (mph),True Course\n')
 	gEarth.write('<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2">\n<Document>\n<Style id="yellowPoly">\n<LineStyle>\n<color>7f00ffff</color>\n<width>4</width>\n</LineStyle>\n<PolyStyle>\n<color>7f00ff00</color>\n</PolyStyle>\n</Style>\n<Placemark>\n<styleUrl>#yellowPoly</styleUrl>\n<LineString>\n<extrude>1</extrude>\n<tesselate>1</tesselate>\n<altitudeMode>absolute</altitudeMode>\n<coordinates>\n')
-	myMaps.write('BeagleBone Black Date and Time UTC,Satellite Timestamp UTC,DD Latitude,DD Longitude,Altitude Above Sea Level (meters)\n')
+	myMaps.write(maps_title)
 
-	error_count = 0
 	for line in infile:
-		try:
-			# work on dt = datetime.datetime.strptime( line[:line.rfind('2016-')+26], '%Y-%m-%d %H:%M:%S.%f')
-			dt = datetime.datetime.strptime( line[:line.find(',')], '%Y-%m-%d %H:%M:%S.%f')
-			local_datetime = dt.strftime('%m/%d/%Y %H:%M:%S.%f')
+		sentence_indexes = [m.start() for m in re.finditer('2016-', line)]
 
-			# If there is a second nmea sentence that cuts into the first (which happens frequently), use the second one
-			# Assume that every nmea sentence has a '$' character
-			gps = line[line.rfind('$'):]
+		# Get all sentences from line
+		sentences = []
+		for i in range(len(sentence_indexes)):
+			if i == len(sentence_indexes)-1:
+				sentences.append(line[sentence_indexes[i]:])
+			else:
+				sentences.append(line[sentence_indexes[i]:sentence_indexes[i+1]])
 
-			if gps.startswith('$GPGGA'):		
-				gga = nmea.GPGGA()	
-				gga.parse(gps)
-				#print local_datetime + ',' + gps,
-				outGGA.write(local_datetime + ',' + getDateOrTime('%H:%M:%S.%f', gga.timestamp) + ',' + gga.latitude + ',' + gga.lat_direction + ',' + gga.longitude + ',' + gga.lon_direction + ',' + gga.antenna_altitude + ',' + gga.gps_qual + ',' + gga.num_sats + '\n')
-				
-				if gga.latitude and gga.longitude and gga.antenna_altitude:
-					gEarth.write('\t' + getDecimalDegrees(gga.longitude, gga.lon_direction) + ',' + getDecimalDegrees(gga.latitude, gga.lat_direction) + ',' + gga.antenna_altitude + '\n')
-					myMaps.write(local_datetime + ',' + getDateOrTime('%H:%M:%S.%f', gga.timestamp) + ',' + getDecimalDegrees(gga.latitude, gga.lat_direction) + ',' + getDecimalDegrees(gga.longitude, gga.lon_direction) + ',' + gga.antenna_altitude + '\n')
+		# Parse sentences
+		for sentence in sentences:
+			try:
+				if '$GP' not in sentence and '*' not in sentence:
+					raise StandardError('Not a valid nmea sentence')
 
-			if gps.startswith('$GPRMC'):		
-				rmc = nmea.GPRMC()	
-				rmc.parse(gps)
-				#print local_datetime + ',' + gps,
-				outRMC.write(local_datetime + ',' + getDateOrTime('%m/%d/%Y %H:%M:%S.%f', rmc.timestamp, rmc.datestamp) + ',' + rmc.lat + ',' + rmc.lat_dir + ',' + rmc.lon + ',' + rmc.lon_dir + ',' + rmc.spd_over_grnd + ',' + str(float(rmc.spd_over_grnd)/0.868976) + ',' + rmc.true_course + '\n')
-				
-				# Should the rmc data be included to googleMyMaps.csv?
-				#if rmc.lat and rmc.lon:
-					#myMaps.write(local_datetime + ',' + getDateOrTime('%H:%M:%S.%f', rmc.timestamp) + ',' + getDecimalDegrees(rmc.lat, rmc.lat_dir) + ',' + getDecimalDegrees(rmc.lon, rmc.lon_dir) + '\n')
+				dt = datetime.datetime.strptime( sentence[:sentence.find(',')], '%Y-%m-%d %H:%M:%S.%f')
+				local_datetime = dt.strftime('%m/%d/%Y %H:%M:%S.%f')
+				gps = sentence[sentence.rfind('$'):]
+				#print sentence,
 
-		except Exception as err:
-			error_msg = 'Error occurred while reading: ' + line + '\tError: ' + str(err) + '\n'
-			print error_msg
-			errors.write(error_msg)
-			error_count += 1
+				if gps.startswith('$GPGGA'):		
+					gga = nmea.GPGGA()	
+					gga.parse(gps)
+					#print local_datetime + ',' + gps,
+					outGGA.write(local_datetime + ',' + getDateOrTime('%H:%M:%S.%f', gga.timestamp) + ',' + gga.latitude + ',' + gga.lat_direction + ',' + gga.longitude + ',' + gga.lon_direction + ',' + gga.antenna_altitude + ',' + gga.gps_qual + ',' + gga.num_sats + '\n')
+					
+					if gga.latitude and gga.longitude and gga.antenna_altitude:
+						gEarth.write('\t' + getDecimalDegrees(gga.longitude, gga.lon_direction) + ',' + getDecimalDegrees(gga.latitude, gga.lat_direction) + ',' + gga.antenna_altitude + '\n')
+						if maps_count % 2000 == 0:
+							maps_offset += ',,,,'
+							myMaps.write(maps_offset + maps_title)
+							maps_count = 1
+						myMaps.write(maps_offset + local_datetime + ',' + getDecimalDegrees(gga.latitude, gga.lat_direction) + ',' + getDecimalDegrees(gga.longitude, gga.lon_direction) + ',' + gga.antenna_altitude + '\n')
+						maps_count += 1
+
+				if gps.startswith('$GPRMC'):		
+					rmc = nmea.GPRMC()	
+					rmc.parse(gps)
+					#print local_datetime + ',' + gps,
+					outRMC.write(local_datetime + ',' + getDateOrTime('%m/%d/%Y %H:%M:%S.%f', rmc.timestamp, rmc.datestamp) + ',' + rmc.lat + ',' + rmc.lat_dir + ',' + rmc.lon + ',' + rmc.lon_dir + ',' + rmc.spd_over_grnd + ',' + str(float(rmc.spd_over_grnd)/0.868976) + ',' + rmc.true_course + '\n')
+
+			except Exception as err:
+				error_msg = 'Error occurred while reading: ' + repr(sentence) + '\tError: ' + str(err) + '\n'
+				print error_msg
+				errors.write(error_msg)
+				error_count += 1
 	gEarth.write('</coordinates>\n</LineString>\n</Placemark>\n</Document>\n</kml>')
 
-print 'Number of faulty nmea sentences:', error_count
+print '\nNumber of faulty nmea sentences:', error_count
 print 'Completed writing to files'
 print 'Time elapsed:', (datetime.datetime.now() - start_time) 
