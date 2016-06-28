@@ -10,3 +10,4 @@ ps aux | grep extTemp
 ps aux | grep extTemp_card
 ps aux | grep accel
 ps aux | grep accel_card
+
